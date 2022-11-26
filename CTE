@@ -1,0 +1,45 @@
+
+STEP 1 Subquery rewritten into CTE: Find the average amount paid by the top 5 customers using CTE
+
+WITH average_total_amount_paid_cte(customer_id, first_name, last_name, city, country, total_amount_paid)AS
+(SELECT A.customer_id, A.first_name, A.last_name, C.city, D.country,
+SUM(E.amount) AS total_amount_paid
+FROM customer A 
+INNER JOIN address B ON A.address_id = B.address_id
+INNER JOIN city C ON B.city_id = C.city_id
+INNER JOIN country D ON C.country_id = D.country_id
+INNER JOIN payment E ON A.customer_id = E.customer_id
+WHERE C.city IN ('Aurora','Tokat','Tarsus','Atlixco','Emeishan','Pontianak', 'Shimoga','Aparecia de Goinia','Zalatun', 'Taguig')
+GROUP BY A.customer_id, A.first_name, A.last_name, C.city, D.country
+ORDER BY total_amount_paid DESC
+LIMIT 5)
+SELECT AVG(total_amount_paid) AS average_total_amount_paid
+FROM average_total_amount_paid_cte
+
+
+STEP 2 Subquery rewritten into CTE: Find out how many of the top 5 customers are based within each country
+
+WITH top_5_customers_cte(first_name, country, total_amount_paid) AS 
+(SELECT DISTINCT (A.country), COUNT (DISTINCT D.customer_id) AS all_customers_count, COUNT(DISTINCT top_5_customers.customer_id) as count_top_customer
+FROM country A
+INNER JOIN city B ON A.country_id = B.country_id
+INNER JOIN address C ON B.city_id = C.city_id
+INNER JOIN customer D ON C.address_id = D.address_id
+LEFT JOIN
+(SELECT A.customer_id, A.first_name, A.last_name, C.city, D.country,
+SUM(E.amount) AS total_amount_paid
+FROM customer A 
+INNER JOIN address B ON A.address_id = B.address_id
+INNER JOIN city C ON B.city_id = C.city_id
+INNER JOIN country D ON C.country_id = D.country_id
+INNER JOIN payment E ON A.customer_id = E.customer_id
+WHERE C.city IN ('Aurora','Tokat','Tarsus','Atlixco','Emeishan','Pontianak', 'Shimoga','Aparecia de Goinia','Zalatun', 'Taguig')
+GROUP BY A.customer_id, A.first_name, A.last_name, C.city, D.country
+ORDER BY total_amount_paid DESC
+LIMIT 5) AS top_5_customers
+ON A.country = top_5_customers.COUNTRY
+GROUP BY A.country, top_5_customers
+ORDER BY count_top_customer DESC)
+SELECT first_name AS country, country AS all_customer_count, total_amount_paid AS top_5_customer_cte
+FROM top_5_customers_cte
+LIMIT 5;
