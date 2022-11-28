@@ -1,7 +1,7 @@
 # SQL
 In this repo you can find my SQL scripts, which I developed as part of my training as a data analyst at CareerFoundry.
 
-# About the Project "Rockbuster Stealth"
+## About the Project "Rockbuster Stealth"
 Rockbuster Stealth LLC is a movie rental company that used to have stores around the world. Facing stiff competition from streaming services such as Netflix and Amazon Prime, the Rockbuster Stealth management team is planning to use its existing movie licenses to launch an online video rental service in order to stay competitive. My task as a data analyst hired by Rockbuster Stealth’s business intelligence (BI) was to help with the launch strategy for the new online video service. The BI department helps other departments, from inventory to customer insights, with data-related queries. 
 
 My first task was to load all of Rockbuster’s data into a relational database management system (RDBMS). Then, use SQL to analyze the data and answer any ad-hoc business questions that other departments may had. 
